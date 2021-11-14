@@ -59,3 +59,10 @@ def euclide(a, b):
 
 def bezout(a, b):
     ...
+
+
+## Courbe de Koch
+
+
+def koch(n, l):
+    ...
