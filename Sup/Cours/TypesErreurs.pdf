@@ -1,0 +1,220 @@
+% !TeX program = lualatex
+% !TeX encoding = UTF-8
+
+\documentclass[twocolumn]{book} % [twocolumn]
+
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\usepackage{microtype}
+\usepackage{luacode}
+\usepackage{xcolor}
+\usepackage{multicol}
+
+\usepackage{mystyle} % [portrait]
+\usepackage{mymath}
+\usepackage{mycode}
+
+\usetikzlibrary{calc}
+
+\begin{document}
+
+\chapter*{Types et erreurs}
+
+\section{Typage des données}
+
+\subsection{Notion de type en Python}
+
+Le langage Python est un langage \textbf{fortement typé}~: toutes les données manipulées ont un \textbf{type} qui indique comment interpréter et utiliser ces données (qui ne sont, à la base, qu'une suite de chiffres binaires)~:\footnote{C'est indiqué~\py{class} car en Python, toute donnée est un \emph{objet}.}
+
+\begin{minted}{shell}
+>>> type(3)
+<class 'int'>
+>>> type([1, 2, 3])
+<class 'list'>
+>>> type('Bonjour')
+<class 'str'>
+\end{minted}
+
+Python est, de plus, un langage typé \textbf{dynamiquement}~: le type est vérifié lors de l'exécution, \emph{au dernier moment}. Si, au moment de l'exécution, on lui demande de faire une opération qui n'a pas de sens, il le signale en interrompant son exécution et en affichant une erreur~:
+
+\begin{minted}{shell}
+>>> 1 + "Bonjour"
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+\end{minted}
+
+L'aspect~\emph{dynamique} se traduit par le fait que Python ne détecte à l'avance, lorsque l'on écrit la fonction, s'il va y avoir des problèmes. Ainsi, Python accepte sans rien dire la définition de la fonction suivante~:
+
+\begin{minted}{python}
+def erreur_en_vue(n):
+    x = n + 1 # n doit être un nombre
+    y = "Bonjour" + n # n doit être une chaîne de caractère
+\end{minted}
+
+Mais on ne peut pas l'utiliser avec un entier~:
+
+\begin{minted}{shell}
+>>> erreur_en_vue(4)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 3, in erreur_en_vue
+TypeError: cannot concatenate 'str' and 'int' objects
+\end{minted}
+
+ou avec une chaîne de caractères~:
+
+\begin{minted}{shell}
+>>> erreur_en_vue("tout le monde")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 2, in erreur_en_vue
+TypeError: cannot concatenate 'str' and 'int' objects    
+\end{minted}
+
+On notera que selon les cas, l'erreur est déclenchée à la ligne 2 ou la ligne 3.
+
+\subsection{Indication de types}
+
+Pour éviter cette sorte d'erreur, voici quelques règles à respecter~:
+
+\begin{glouba}[Quelques règles]
+	\begin{itemize}
+		\item \textbf{Chaque variable} doit contenir des données d'un \textbf{unique type}.
+		      %   \vspace{6pt}
+		\item Lors que l'on manipule un tableau, il faut distinguer les \textbf{indices} et les \textbf{valeurs}.
+		      %   \vspace{6pt}
+		\item Concernant les \textbf{fonctions}, chaque \textbf{argument} doit avoir un \textbf{type précis} et si la fonction renvoie un résultat, celui-ci doit avoir un \textbf{type précis}. En particulier, tous les exécutions doivent se terminer par un~\py{return}, et tous les~\py{return} doivent renvoyer le même type de donnée.
+		      %   \end{itemize}
+	\end{itemize}
+\end{glouba}
+
+Pour les fonctions, on s'efforcera de toujours \textbf{spécifier sa signature}, c'est-à-dire indiquer quels sont les types des arguments et quel type est retourné par la fonction.
+
+Il est possible d'inclure cette signature directement dans la définition de la fonction, à l'aide d'une syntaxe dont voici un exemple, tiré d'un sujet de Centrale~:
+
+\begin{minted}{python}
+def uneFonction(n:int, X:[float], c:str, u) -> (float, int):
+\end{minted}
+
+Ici, on définit une fonction~\py{uneFonction} dont les arguments sont~\py{n} de type~\py{int} donc un entier, \py{X} de type~\py{[float]} autrement dit un tableau de flottants (les crochets rappelant la notation des tableaux), \py{c} une chaîne de caractères, \py{u} de type non précisé (quelle drôle d'idée) et qui renvoit un couple constitué d'un flottant et d'un entier.
+
+\paragraph{Remarque} Cette notation est indicative, puisque comme indiqué précédemment, Python ne vérifie pas les types à l'avance. Ainsi, la définition de fonction suivante est acceptée sans broncher~:
+\begin{minted}{python}
+def erreur_en_vue(n:int) -> str:
+    return "Bonjour" + n
+\end{minted}
+De plus, certains programmes d'aide à l'édition de textes (des \href{https://en.wikipedia.org/wiki/Lint_(software)}{linters}\footnote{Le lien pointe vers la page en anglais, car la page en français ne parle que du programme qui, originellement, donne son nom à ce type d'analyseur.}) permettent d'analyser les indications de type, comme \href{http://mypy-lang.org}{mypy}.
+
+\section{Gestion des erreurs}
+
+Les erreurs dans l'exécution d'un programme entraîne normalement l'interruption de celui-ci (même si, mais c'est en dehors des limites du programme, une erreur peut être \emph{récupérée} et traîtée plutôt que d'interrompt)
+
+Pour vérifier qu'une condition est bien remplie, et que le signaler au besoin, on utilise une instruction spéciale~: une \textbf{assertion}. La syntaxe de base est d'écrire~\py{assert} suivi d'une condition booléenne. Par exemple~:
+
+\begin{minted}{python}
+assert x == 1
+\end{minted}
+
+Le comportement du programme est le suivant~:
+\begin{enumerate}
+	\item Le programme teste la condition~;
+	\item si la condition s'évalue à~\py{True} (si la condition est vraie), alors le programme continue~;
+	\item sinon le programme s'interrompt en faisant une erreur~\py{AssertionError}.
+\end{enumerate}
+
+\begin{examplebox}
+	Considérons par exemple la définition de la factorielle, avec une assertion vérifiant que l'entier passé en argument est positif (on a utilisé ici des indications de type)~:
+	\begin{minted}{python}
+def factorielle(n : int) -> int:
+    assert n >= 0
+    f = 1
+    for i in range(2, n + 1):
+        f = f * i
+    return f
+\end{minted}
+	Si on appelle la fonction avec un argument positif (et un entier car c'est ce qui est spécifié), alors tout se passe comme normalement~:
+	\begin{minted}{python}
+>>> factorielle(10)
+3628800
+\end{minted}
+	Sinon, l'exécution s'interrompt avec une erreur. Notons que l'on peut retrouver où l'erreur a été déclenchée, et donc dans quelle fonction l'assertion fausse a été trouvée~:
+	\begin{minted}{python}
+>>> factorielle(-5)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 2, in factorielle
+AssertionError
+\end{minted}
+
+\end{examplebox}
+\begin{glouba}[Exemples de conditions où une assertion est utile]
+	\begin{itemize}
+		\item on veut un entier positif~;
+		\item on veut un tableau non vide~;
+		\item on veut deux tableaux de même longueur~;
+		\item on veut qu'un entier soit un indice valide dans un tableau.
+	\end{itemize}
+\end{glouba}
+
+\paragraph{Remarques}
+\begin{itemize}
+	\item On pourrait inclure dans les assertions la vérification des types de données. Mais il s'agit un problème différent, puisque l'usage d'une fonction avec les bons types (qui doivent être spécifiés d'une manière ou d'une autre) est de la responsabilité du programmeur. Les assertions permettent de tester d'autres conditions, en particulier la \textbf{validation des données}, qui ne peuvent être exprimées à l'aide d'indications de types.
+	\item Les assertions sont uniquement un instrument de débuggage. Ils servent à s'assurer que lors de la mise au point d'une fonction, de l'implémentation d'un algorithme, d'un programme, etc., les fonctions sont utilisées correctement. Une fois la mise au point terminée, il est possible de désactiver les assertions (qui, après tout, sont des tests et ont un coût à l'exécution).
+\end{itemize}
+
+Il est possible d'ajouter une chaîne de caractères à un~\py{assert}, qui sera affiché en cas de condition non vérifiée (les <<~\py{\}~>> en fin de ligne permettent de passer à la ligne pour des instructions trop longues)~:
+
+\begin{minted}{python}
+def min_diff(t1, t2):
+    assert len(t1) != len(t2), \
+        "les deux tableaux doivent avoir la même taille"
+    assert len(t1) > 0, \
+        "les tableaux ne doivent pas être vides"
+    m = abs(t2[0] - t1[0])
+    for i in range(1, len(t1)):
+        v = abs(t2[i] - t1[i])
+        if v < m:
+            m = v
+    return m
+\end{minted}
+
+% \begin{exobox}
+
+% \end{exobox}
+
+% \section{Test des programmes}
+
+% On va parler de types
+
+% \begin{quotation}
+% 	\textbf{Spécification des données attendues en entrée, et fournies en sortie/retour} On entraîne les étudiants à accompagner leurs programmes et leurs fonctions d'une spécification. Les signatures des fonctions sont toujours précisées.
+% \end{quotation}
+
+% D'assertions pour la gestion des erreurs
+
+% \begin{quotation}
+% 	\textbf{Assertion} L'utilisation d'assertions est encouragée par exemple pour valider des entrées. La levée d'une assertion entraîne l'arrêt du programme. Ni la définition ni le rattrapage des exceptions ne sont au programme.
+% \end{quotation}
+
+% De tests
+
+% \begin{quotation}
+% 	\textbf{Jeu de tests associé à un programme} Il n'est pas attendu de connaissances sur la génération automatique de jeux de tests~; un étudiant doit savoir écrire un jeu de tests à la main, donnant à la fois des entrées et les sorties correspondantes attendues. On sensibilise, par des exemples, à la notion de partitionnement des domaines d'entrée et au test des limites.
+% \end{quotation}
+
+% Et des trucs dont je ne sais pas encore trop quoi faire.
+
+% \begin{quotation}
+% 	\textbf{Explicitation et justification des choix de conception ou programmation} Les parties complexes de codes ou d'algori\-thmes font l'objet de commentaires qui l'éclairent en évitant la paraphrase. Le choix des collections employées (par exemple, liste ou dictionnaire) est un choix éclairé.
+% \end{quotation}
+
+\end{document}
