@@ -7,3 +7,12 @@ Ce repo regroupe un certain nombre de documents pour l'enseignement de l'informa
 1. [Rappels de Python](Sup/Cours/Rappels.pdf)
 2. [Parcours de tableaux](Sup/Cours/Tableaux.pdf)
 3. [Types et erreurs](Sup/Cours/TypesErreurs.pdf)
+4. [Analyse d'algorithmes](Sup/Cours/AnalyseAlgo.pdf)
+
+## TPs
+
+### Semestre 2
+
+1. [Reprise](<Sup/TPs/Semestre 2/Reprise.pdf>)
+2. [Mastermind](<Sup/TPs/Semestre 2/Mastermind.pdf>)
+3. [Fonctions numériques](<Sup/TPs/Semestre 2/Calculs.pdf>)
