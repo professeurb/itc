@@ -1,6 +1,6 @@
 # Informatique de Tronc Commun
 
-Ce repo regroupe un certain nombre de documents pour l'enseignement de l'informatique de tronc commun en Python en classes préparatoires scientifiques.
+Ce dépot regroupe un certain nombre de documents pour l'enseignement de l'informatique de tronc commun en Python en classes préparatoires scientifiques.
 
 ## Cours
 
@@ -16,3 +16,4 @@ Ce repo regroupe un certain nombre de documents pour l'enseignement de l'informa
 1. [Reprise](<Sup/TPs/Semestre 2/Reprise.pdf>)
 2. [Mastermind](<Sup/TPs/Semestre 2/Mastermind.pdf>)
 3. [Fonctions numériques](<Sup/TPs/Semestre 2/Calculs.pdf>)
+4. [Graphes](<Sup/TPs/Semestre 2/Graphes.zip>)
