@@ -6,4 +6,4 @@ Ce dépot regroupe un certain nombre de documents pour l'enseignement de l'infor
 
 ### Semestre 1
 
-- [Fichiers TP3](<https://github.com/professeurb/itc/tree/main/Sup/TPs/Semestre\ 1/TP3.tar.gz>)
+- [Fichiers TP3](Sup/TPs/Semestre1/TP3.tar.gz)
