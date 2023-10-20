@@ -6,4 +6,6 @@ Ce dépot regroupe un certain nombre de documents pour l'enseignement de l'infor
 
 ### Semestre 1
 
-- [Fichiers TP3](Sup/TPs/Semestre1/TP3.tar.gz?raw=1)
+#### TP3
+- [Énoncé](Sup/TPs/Semetre1/Biblis.pdf?raw=1)
+- [Fichiers](Sup/TPs/Semestre1/TP3.tar.gz?raw=1)
